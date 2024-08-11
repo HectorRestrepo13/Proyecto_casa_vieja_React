@@ -1,8 +1,17 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PROYECTO RESTAURANTE CASA VIEJA
 
-Currently, two official plugins are available:
+Este proyecto tiene como objetivo desarrollar una página web para el restaurante "Casa Vieja", ubicado en Cartago. El sitio web proporcionará información sobre el menú, la historia del restaurante, eventos especiales, y permitirá a los clientes realizar reservas en línea.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Integrantes del Grupo
+Héctor Fabio Restrepo Soto
+Jhon Narvaes
+
+Descripción del Proyecto
+El sitio web será construido utilizando las siguientes tecnologías:
+
+React: Biblioteca de JavaScript para construir interfaces de usuario.
+Vite: Herramienta de desarrollo rápido para proyectos de JavaScript.
+
+Funcionalidades del Sitio Web
