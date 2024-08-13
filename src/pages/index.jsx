@@ -3,4 +3,4 @@ import Login from "../components/login/login";
 
 export { Login }
 
-// export const DuenoBlogg = React.lazy(() => import(''));
+export const Registro = React.lazy(() => import('../components/registro/registro'));

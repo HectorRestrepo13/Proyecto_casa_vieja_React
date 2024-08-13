@@ -58,8 +58,10 @@
   color: black;
 }
 
-.piePaginaLink {
-  background-color: rgba(39, 37, 37, 0.943);
-  padding-top: 15px;
-  padding-bottom: 5px;
+.contenedorDatos {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: flex-start !important;
 }

@@ -1,4 +1,3 @@
-import './App.css'
 import { Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AppRouter } from './router';
