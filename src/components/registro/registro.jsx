@@ -7,6 +7,7 @@ const Registro = () => {
 
     let navigate = useNavigate();
     const [datosRoles, setDatosRoles] = useState(null);
+    const [recargaRegistro, setRecargaRegistro] = useState(false);
     let nombre = useRef();
     let cedula = useRef();
     let telefono = useRef();
@@ -58,7 +59,7 @@ const Registro = () => {
 
             try {
 
-
+                setRecargaRegistro(true)
                 let registrar = await fetch("http://localhost:3000/api/login/login/registrarUsuario/", {
                     method: "POST",
                     headers: {
@@ -80,11 +81,62 @@ const Registro = () => {
                 }
 
                 let jsonRegistrar = await registrar.json();
-                console.log(jsonRegistrar)
+                setRecargaRegistro(false)
                 if (jsonRegistrar.status == true) {
 
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: jsonRegistrar.descripcion
+                    }).then(() => { navigate("/") })
                 }
                 else {
+
+                    if (jsonRegistrar.validaciones != null) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "warning",
+                            title: jsonRegistrar.validaciones[0].msg
+                        });
+                    }
+                    else {
+                        console.log(jsonRegistrar)
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "warning",
+                            title: jsonRegistrar.descripcion
+                        });
+                    }
 
                 }
 
@@ -207,11 +259,35 @@ const Registro = () => {
 
 
 
-                                                    {/* <!-- Submit button --> */}
                                                     <div className="btnIniciar">
-                                                        <button onClick={registrarUsuario} type="button" className="btn btn-primary btn-block mb-4">
-                                                            Guardar
-                                                        </button>
+                                                        {
+                                                            recargaRegistro === false ? (<> <button onClick={registrarUsuario} type="button" className="btn btn-primary btn-block mb-4">
+                                                                Guardar
+                                                            </button></>) : (<>
+                                                                <div className="spinner-grow text-primary" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div>
+                                                                <div className="spinner-grow text-secondary" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div>
+                                                                <div className="spinner-grow text-success" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div>
+                                                                <div className="spinner-grow text-danger" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div>
+                                                                <div className="spinner-grow text-warning" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div>
+                                                                <div className="spinner-grow text-info" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div>
+
+                                                                <div className="spinner-grow text-dark" role="status">
+                                                                    <span className="visually-hidden">Loading...</span>
+                                                                </div></>)
+                                                        }
+
                                                     </div>
 
 
