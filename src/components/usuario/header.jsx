@@ -1,4 +1,63 @@
+import { useEffect, useState } from "react";
+import { jwtDecode } from 'jwt-decode'
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+
 const Header = () => {
+
+    const [datosUsuario, setDatosUsuario] = useState(null);
+    let navigate = useNavigate();
+
+    // verifico si tiene token en el local Store
+    useEffect(() => {
+        const verificarToken = () => {
+            // Traigo el token del localStorage
+            let token = localStorage.getItem("tokenUsuario");
+            // si es null es porque no a iniciado sesion entonces que lo envie al login
+            if (token == null) {
+                Swal.fire({
+                    title: "Su Inicio de Sesion a Caducado!!",
+                    text: "Vuelve a Iniciar Sesion",
+                    icon: "warning"
+                }).then(() => {
+                    navigate("/")
+                })
+            }
+
+            // Decodificar el token sin verificar la firma
+            const tokenDescodificado = jwtDecode(token);
+            setDatosUsuario(tokenDescodificado.datos[0])
+            console.log(tokenDescodificado)
+
+            const currentTime = Date.now() / 1000; // Convertir a segundos
+            if (tokenDescodificado.exp < currentTime) {
+                // si entra aca es porque El token ha expirado
+                Swal.fire({
+                    title: "Su Inicio de Sesion a Caducado!!",
+                    text: "Vuelve a Iniciar Sesion",
+                    icon: "warning"
+                }).then(() => {
+                    cerrarSesion();
+                })
+
+            }
+
+        }
+        verificarToken();
+
+    }, [])
+
+    // FUNCION CERRAR SESION 
+    const cerrarSesion = () => {
+
+        localStorage.clear("tokenUsuario");
+        navigate("/")
+
+    }
+    // --- FIN FUNCION --
+
+
+
     return (
         <>
             {/* <!-- ======= Header ======= --> */}
@@ -15,7 +74,7 @@ const Header = () => {
 
                 <div className="search-bar">
                     <form className="search-form d-flex align-items-center" method="POST" action="#">
-                        <input type="text" name="query" placeholder="Search" title="Enter search keyword" />
+                        <input type="text" name="query" placeholder="Buscar" title="Enter search keyword" />
                         <button type="submit" title="Search"><i className="bi bi-search"></i></button>
                     </form>
                 </div>
@@ -181,15 +240,15 @@ const Header = () => {
                         <li className="nav-item dropdown pe-3">
 
                             <a className="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                                <img src="assets/img/profile-img.jpg" alt="Profile" className="rounded-circle" />
-                                <span className="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+                                <img src="usuarioSinFoto.png" alt="Profile" className="rounded-circle" />
+                                <span className="d-none d-md-block dropdown-toggle ps-2">{datosUsuario != null ? datosUsuario.nombreCompleto : "Usuario"}</span>
                             </a>
                             {/* <!-- End Profile Iamge Icon --> */}
 
                             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                                 <li className="dropdown-header">
-                                    <h6>Kevin Anderson</h6>
-                                    <span>Web Designer</span>
+                                    <h6>{datosUsuario != null ? datosUsuario.nombreCompleto : "Usuario"}</h6>
+                                    <span>{datosUsuario != null && datosUsuario.RolId == 1 ? "ADMINISTRADOR" : datosUsuario != null && datosUsuario.RolId == 2 ? "CAJERO" : datosUsuario != null && datosUsuario.RolId == 3 ? "MESERO" : ""}</span>
                                 </li>
                                 <li>
                                     <hr className="dropdown-divider" />
@@ -198,7 +257,7 @@ const Header = () => {
                                 <li>
                                     <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
                                         <i className="bi bi-person"></i>
-                                        <span>My Profile</span>
+                                        <span>Mi Perfil</span>
                                     </a>
                                 </li>
                                 <li>
@@ -218,7 +277,7 @@ const Header = () => {
                                 <li>
                                     <a className="dropdown-item d-flex align-items-center" href="pages-faq.html">
                                         <i className="bi bi-question-circle"></i>
-                                        <span>Need Help?</span>
+                                        <span>¿Nesecitas Ayuda?</span>
                                     </a>
                                 </li>
                                 <li>
@@ -226,10 +285,12 @@ const Header = () => {
                                 </li>
 
                                 <li>
-                                    <a className="dropdown-item d-flex align-items-center" href="#">
+                                    <div onClick={cerrarSesion} className="dropdown-item d-flex align-items-center">
                                         <i className="bi bi-box-arrow-right"></i>
-                                        <span>Sign Out</span>
-                                    </a>
+                                        <span>Cerrar Sesion</span>
+
+                                    </div>
+
                                 </li>
 
                             </ul>
