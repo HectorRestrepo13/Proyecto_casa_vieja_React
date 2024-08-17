@@ -9,12 +9,12 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
 
         <>
             {/* <!-- ======= Sidebar ======= --> */}
-            <aside id="sidebar" className="sidebar">
+            <aside style={{ backgroundColor: "#F7F2EC" }} id="sidebar" className="sidebar">
 
                 <ul className="sidebar-nav" id="sidebar-nav">
 
                     <li onClick={() => { setMenuDespliegue("1") }} className="nav-item" >
-                        <a className={menuDespliegue == "1" ? "nav-link" : "nav-link collapsed"} href="#">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "1" ? "nav-link" : "nav-link collapsed"} href="#">
                             <i className="bi bi-grid"></i>
                             <span>Inicio</span>
                         </a>
@@ -22,7 +22,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     {/* <!-- End Dashboard Nav --> */}
 
                     <li onClick={() => { setMenuDespliegue("2") }} className="nav-item">
-                        <a className={menuDespliegue == "2" ? "nav-link" : "nav-link collapsed"} data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "2" ? "nav-link" : "nav-link collapsed"} data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                             <i className="bi bi-journal-text"></i><span>Pedidos</span>
                         </a>
 
@@ -30,7 +30,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     {/* <!-- End Components Nav --> */}
 
                     <li onClick={() => { setMenuDespliegue("3") }} className="nav-item">
-                        <a className={menuDespliegue == "3" ? "nav-link" : "nav-link collapsed"} data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "3" ? "nav-link" : "nav-link collapsed"} data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                             <i className="bi bi-menu-button-wide"></i><span>Inventario</span>
                         </a>
 
@@ -40,7 +40,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
 
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                             <i className="bi bi-bar-chart"></i><span>Charts</span><i className="bi bi-chevron-down ms-auto"></i>
                         </a>
                         <ul id="charts-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -64,7 +64,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     {/* <!-- End Charts Nav --> */}
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
                             <i className="bi bi-gem"></i><span>ADMIN</span><i className="bi bi-chevron-down ms-auto"></i>
                         </a>
                         <ul id="icons-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -90,7 +90,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     <li className="nav-heading">Paginas</li>
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="users-profile.html">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="users-profile.html">
                             <i className="bi bi-person"></i>
                             <span>Perfil</span>
                         </a>
@@ -98,7 +98,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     {/* <!-- End Profile Page Nav --> */}
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="pages-contact.html">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="pages-contact.html">
                             <i className="bi bi-envelope"></i>
                             <span>Contacto</span>
                         </a>
@@ -106,7 +106,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     {/* <!-- End Contact Page Nav --> */}
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="pages-register.html">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="pages-register.html">
                             <i className="bi bi-card-list"></i>
                             <span>Registrar</span>
                         </a>
@@ -114,7 +114,7 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     {/* <!-- End Register Page Nav --> */}
 
                     <li className="nav-item">
-                        <a className="nav-link collapsed" href="pages-login.html">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="pages-login.html">
                             <i className="bi bi-box-arrow-in-right"></i>
                             <span>Salir</span>
                         </a>

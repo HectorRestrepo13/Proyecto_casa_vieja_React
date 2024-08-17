@@ -61,7 +61,7 @@ const Header = () => {
     return (
         <>
             {/* <!-- ======= Header ======= --> */}
-            <header id="header" className="header fixed-top d-flex align-items-center">
+            <header style={{ backgroundColor: "#F7F2EC" }} id="header" className="header fixed-top d-flex align-items-center">
 
                 <div className="d-flex align-items-center justify-content-between">
                     <a href="index.html" className="logo d-flex align-items-center">

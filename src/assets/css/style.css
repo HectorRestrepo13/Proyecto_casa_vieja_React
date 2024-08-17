@@ -461,7 +461,7 @@ h6 {
   list-style: none;
 }
 
-.header-nav>ul {
+.header-nav > ul {
   margin: 0;
   padding: 0;
 }
@@ -630,7 +630,6 @@ h6 {
 }
 
 @media (min-width: 1200px) {
-
   #main,
   #footer {
     margin-left: 300px;
@@ -644,7 +643,6 @@ h6 {
 }
 
 @media (min-width: 1200px) {
-
   .toggle-sidebar #main,
   .toggle-sidebar #footer {
     margin-left: 0;
@@ -703,9 +701,10 @@ h6 {
 }
 
 .sidebar-nav .nav-link.collapsed i {
-  color: #899bbd;
+  color: #000000;
 }
 
+/* color al pasar el mause por el lateral */
 .sidebar-nav .nav-link:hover {
   color: #4154f1;
   background: #f6f9ff;
@@ -883,7 +882,7 @@ h6 {
 }
 
 /* News & Updates */
-.dashboard .news .post-item+.post-item {
+.dashboard .news .post-item + .post-item {
   margin-top: 15px;
 }
 
@@ -1149,7 +1148,7 @@ h6 {
   padding: 12px 15px;
 }
 
-.contact .php-email-form button[type=submit] {
+.contact .php-email-form button[type="submit"] {
   background: #4154f1;
   border: 0;
   padding: 10px 30px;
@@ -1158,7 +1157,7 @@ h6 {
   border-radius: 4px;
 }
 
-.contact .php-email-form button[type=submit]:hover {
+.contact .php-email-form button[type="submit"]:hover {
   background: #5969f3;
 }
 
@@ -1230,4 +1229,202 @@ h6 {
   text-align: center;
   font-size: 13px;
   color: #012970;
+}
+
+/* ESTILO MODIFICADO */
+.contBotones {
+  display: flex;
+}
+
+.secundariBotonAnular {
+  margin-left: auto;
+  width: 100px;
+}
+
+.secundariBotonAnular button {
+  margin-left: 10px;
+  width: 100%;
+  background-color: #b12a25;
+  color: #ffffff;
+  border: solid 1px rgb(114, 2, 2);
+  height: 30px;
+  border-radius: 10px;
+}
+
+.secundariBotonAnular button:hover {
+  background-color: #ed3c0d;
+}
+.secundariBotonEditar {
+  margin-left: 10px;
+  width: 100px;
+}
+
+.secundariBotonEditar button {
+  margin-left: 10px;
+  width: 100%;
+  background-color: #0786ad; /* Azul claro para editar */
+  color: #ffffff; /* Blanco para el texto */
+
+  border: solid 1px rgb(114, 2, 2);
+  height: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada al hacer hover */
+}
+
+.secundariBotonEditar button:hover {
+  background-color: #012970;
+}
+
+.cardPersonalizado {
+  background-color: #e7dccf;
+  color: #333333;
+  border-bottom-left-radius: 90px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.7);
+  font-family: "Times New Roman", Times, serif;
+}
+
+.titulo {
+  display: flex;
+  transition: transform 0.8s ease;
+}
+.titulo:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+}
+.tituloCart {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+  font-size: 25px;
+}
+.contePrecio {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+.precio {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.textoCart {
+  font-size: 15px;
+  font-weight: 550;
+}
+
+.miniDescripcion {
+  display: flex;
+}
+
+.categoriaCart {
+  display: flex;
+  margin-left: 15px;
+  transition: transform 0.8s ease;
+}
+
+.estadoCart {
+  display: flex;
+  transition: transform 0.8s ease;
+}
+.estadoCart:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #012970;
+  font-weight: bolder;
+}
+.categoriaCart:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #012970;
+  font-weight: bolder;
+}
+
+.imagenCart {
+  transition: transform 1.5s ease;
+}
+.imagenCart:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  box-shadow: 0 6px 8px rgba(1, 1, 1, 0.25); /* Sombra más pronunciada al hacer hover */
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.btnAgregarMenu {
+  display: flex;
+  margin-left: auto;
+  width: 200px;
+  margin-right: 25px;
+}
+
+.btnAgregarMenu button {
+  width: 100%;
+  height: 40px;
+  background-color: #e7dccf;
+  border-radius: 15px;
+  color: black;
+  border: solid 1px black;
+  font-family: "Times New Roman", Times, serif;
+  box-shadow: 0 6px 8px rgba(1, 1, 1, 0.25); /* Sombra más pronunciada al hacer hover */
+  transition: transform 1.5s ease;
+}
+
+.btnAgregarMenu button:hover {
+  width: 100%;
+  height: 40px;
+  background-color: #d8c7b2;
+  border-radius: 15px;
+  color: black;
+  font-weight: bolder;
+  border: solid 1px black;
+  font-family: "Times New Roman", Times, serif;
+  box-shadow: 0 6px 8px rgba(1, 1, 1, 0.25); /* Sombra más pronunciada al hacer hover */
+  transform: scale(1.1); /* Aplica el zoom */
+}
+
+.item1 {
+  transition: transform 0.4s ease;
+}
+.item1:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #1349a5;
+}
+.item2 {
+  transition: transform 0.4s ease;
+}
+.item2:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #1349a5;
+}
+.item3 {
+  transition: transform 0.4s ease;
+}
+.item3:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #1349a5;
+}
+.item4 {
+  transition: transform 0.4s ease;
+}
+.item4:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #1349a5;
+}
+.item5 {
+  transition: transform 0.4s ease;
+}
+.item5:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #1349a5;
+}
+.item6 {
+  transition: transform 0.4s ease;
+}
+.item6:hover {
+  transform: scale(1.1); /* Aplica el zoom */
+  color: #1349a5;
+}
+
+.contenTituloMenu {
+  display: flex;
+}
+.tituloCategoriaMenu h1 {
+  color: #1349a5;
+  font-style: italic;
+  font-weight: bolder;
+  font-family: "Times New Roman", Times, serif;
 }

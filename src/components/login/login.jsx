@@ -41,7 +41,7 @@ const Login = () => {
                 if (jsonRespuesta.status == true) {
                     let localStore = window.localStorage;
                     localStore.setItem("tokenUsuario", jsonRespuesta.token);
-                    // navigate("/")
+                    navigate("/inventarioMenu")
                 }
                 else {
                     Swal.fire({

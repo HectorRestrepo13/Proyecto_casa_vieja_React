@@ -1,6 +1,6 @@
 import Header from "./header";
 import BarraLateral from "./barraLateral";
-import Main from "./main";
+import Inventario from "./inventario";
 import Footers from "./foooter";
 import { useState } from "react";
 
@@ -16,7 +16,7 @@ const InventarioMenu = () => {
                 <BarraLateral menuDespliegue={menuDespliegue} setMenuDespliegue={setMenuDespliegue}></BarraLateral>
                 {
 
-                    menuDespliegue == "1" ? <Main></Main> : ""
+                    menuDespliegue == "1" ? <Inventario></Inventario> : ""
 
                 }
                 <Footers></Footers>

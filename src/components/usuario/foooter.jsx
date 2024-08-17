@@ -4,11 +4,11 @@ const Footers = () => {
             {/* <!-- ======= Footer ======= --> */}
             <footer id="footer" className="footer">
                 <div className="copyright">
-                    &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+                    &copy; Hecho por  <strong><span>Hector Restrepo - Jhon Narvaes</span></strong>. All Rights Reserved
                 </div>
                 <div className="credits">
 
-                    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                    Diseñado por <a href="#">Hector Restrepo</a>
                 </div>
 
             </footer>
