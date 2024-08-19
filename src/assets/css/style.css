@@ -1281,6 +1281,7 @@ h6 {
   border-bottom-left-radius: 90px;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.7);
   font-family: "Times New Roman", Times, serif;
+  height: 280px;
 }
 
 .titulo {
@@ -1317,19 +1318,22 @@ h6 {
   display: flex;
   margin-left: 15px;
   transition: transform 0.8s ease;
+  font-size: 14px;
 }
 
 .estadoCart {
   display: flex;
+  font-size: 14px;
+
   transition: transform 0.8s ease;
 }
 .estadoCart:hover {
-  transform: scale(1.1); /* Aplica el zoom */
+  transform: scale(1.2); /* Aplica el zoom */
   color: #012970;
   font-weight: bolder;
 }
 .categoriaCart:hover {
-  transform: scale(1.1); /* Aplica el zoom */
+  transform: scale(1.2); /* Aplica el zoom */
   color: #012970;
   font-weight: bolder;
 }
@@ -1427,4 +1431,43 @@ h6 {
   font-style: italic;
   font-weight: bolder;
   font-family: "Times New Roman", Times, serif;
+}
+
+/* Centrar el contenido de carga */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+/* Estilo del texto de carga */
+.loading-text {
+  margin-top: 15px;
+  font-size: 1.5rem;
+  color: #6c757d;
+}
+
+/* Centrar el contenido */
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+/* Estilo del texto */
+.empty-text {
+  text-align: center;
+  color: #6c757d;
+}
+
+/* Icono */
+.empty-icon {
+  font-size: 5rem;
+  color: #6c757d;
 }
