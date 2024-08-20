@@ -29,8 +29,8 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     </li>
                     {/* <!-- End Components Nav --> */}
 
-                    <li onClick={() => { setMenuDespliegue("3") }} className="nav-item">
-                        <a style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "3" ? "nav-link" : "nav-link collapsed"} data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                    <li onClick={() => { setMenuDespliegue("inventario") }} className="nav-item">
+                        <a style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "inventario" || menuDespliegue == "crearNuevoMenu" ? "nav-link" : "nav-link collapsed"} data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                             <i className="bi bi-menu-button-wide"></i><span>Inventario</span>
                         </a>
 

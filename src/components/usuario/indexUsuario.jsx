@@ -3,11 +3,13 @@ import BarraLateral from "./barraLateral";
 import Inventario from "./inventario";
 import Footers from "./foooter";
 import { useState } from "react";
+import CrearMenu from "./crearNuevoMenu";
 
 
 const InventarioMenu = () => {
 
-    const [menuDespliegue, setMenuDespliegue] = useState("1")
+    const [menuDespliegue, setMenuDespliegue] = useState("inventario")
+
 
     return (
         <>
@@ -16,7 +18,7 @@ const InventarioMenu = () => {
                 <BarraLateral menuDespliegue={menuDespliegue} setMenuDespliegue={setMenuDespliegue}></BarraLateral>
                 {
 
-                    menuDespliegue == "1" ? <Inventario></Inventario> : ""
+                    menuDespliegue == "inventario" ? <Inventario setMenuDespliegue={setMenuDespliegue}></Inventario> : menuDespliegue == "crearNuevoMenu" ? <CrearMenu setMenuDespliegue={setMenuDespliegue}></CrearMenu> : ""
 
                 }
                 <Footers></Footers>

@@ -1471,3 +1471,37 @@ h6 {
   font-size: 5rem;
   color: #6c757d;
 }
+
+/* DiSEÑO DEL CREAR NUEVO MENU */
+
+.img-preview {
+  width: 350px;
+  height: 200px;
+  object-fit: cover;
+  border: 2px solid #999898;
+  margin-bottom: 12px;
+  border-radius: 5px;
+}
+
+.contImgenMenu {
+  margin-right: 18px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rowDatosMenu {
+  margin-top: 25px;
+}
+.btnGuardar {
+  margin-top: 20px;
+  margin-right: 18px;
+  display: flex;
+  justify-content: center;
+}
+.btnGuardar button {
+  width: 100%;
+  background-color: #012970;
+  font-size: 20px;
+}
