@@ -10,6 +10,10 @@ const Pedidos = () => {
     // aca se va guardar el menu que devuelve la API
     const [datosMenu, setDatosMenu] = useState(null);
 
+    let fechaActual = useRef();
+    let valorTotal = useRef();
+    let metodoPago = useRef();
+    let inputBuscarMenu = useRef();
 
 
     // FUNCION PARA SELECCIONAR EL MENU
@@ -138,13 +142,24 @@ const Pedidos = () => {
     }, [seleccionarCategoriaMenu])
     // -- FIN USE EFFECT --
 
+
+    // Código para inicializar los popovers en Bootstrap ESTA EN "useEffect" para que se ejecute despues de que cargue todo
+
+    useEffect(() => {
+        // Código para inicializar los popovers en Bootstrap
+        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        popoverTriggerList.map((popoverTriggerEl) => {
+            return new window.bootstrap.Popover(popoverTriggerEl);
+        });
+    }, [itemSeleccionados])
+
     // FUNCION PARA SELECCIONAR LOS ITEM QUE VA PEDIR EL USUARIO
 
     const seleccionarItem = (idMenu, nombreMenu, descripcionMenu, precioMenu, imagenMenu) => {
         try {
 
             let arregloObjetos = [...itemSeleccionados];
-            console.log(arregloObjetos)
+            let nuevoArreglo = new Array();
 
             if (arregloObjetos.length > 0) {
 
@@ -164,6 +179,8 @@ const Pedidos = () => {
                             cantidad: item.cantidad + 1,
                             imagen: imagenMenu
                         };
+
+                        nuevoArreglo = arregloObjetos;
 
                     }
                 })
@@ -223,6 +240,162 @@ const Pedidos = () => {
 
     // -- FIN FUNCION --
 
+    // FUNCION PARA MANDAR LOS DATOS AL MODAL 
+
+    const mandarDatosModalCarrito = () => {
+
+        const fecha = new Date();
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Los meses en JavaScript son 0-indexed, por eso se suma 1
+        const anio = fecha.getFullYear();
+
+        fechaActual.current.value = `${dia}/${mes}/${anio}`;
+        valorTotal.current.value = "000"
+
+        if (itemSeleccionados.length > 0) {
+            let sumaTotal = 0;
+            itemSeleccionados.map((datos) => {
+                sumaTotal += datos.precio * datos.cantidad;
+            })
+
+            valorTotal.current.value = sumaTotal
+        }
+
+    }
+
+    // -- FIN FUNCION --
+
+
+    // FUNCION PARA QUITAR EL ITEM COMPLETO DEL CARRITO
+
+    const quitarItemCompleto = (idItemMenu) => {
+
+        let arregloNuevo = [];
+        let valorItemQuitar = 0;
+
+        itemSeleccionados.map((item) => {
+            if (item.id != idItemMenu) {
+                arregloNuevo.push({
+                    id: item.id,
+                    nombre: item.nombre,
+                    descripcion: item.descripcion,
+                    precio: item.precio,
+                    cantidad: item.cantidad,
+                    imagen: item.imagen
+                })
+
+            }
+            else if (item.id == idItemMenu) {
+                valorItemQuitar = item.precio * item.cantidad;
+            }
+        })
+
+
+        valorTotal.current.value = valorTotal.current.value - valorItemQuitar
+
+        setItemSeleccionados(arregloNuevo)
+
+
+    }
+    // -- FIN FUNCION --
+
+
+    // FUNCION PARA BUSCAR EL MENU POR EL NOMBRE 
+
+    const buscarMenu = async () => {
+
+        if (inputBuscarMenu.current.value != "") {
+
+            try {
+
+                let seleccionarMenuPorNombre = await fetch("http://localhost:3000/api/menu/seleccionarMenuPorNombre/" + inputBuscarMenu.current.value, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem("tokenUsuario")
+                    }
+                });
+
+                if (!seleccionarMenuPorNombre.ok) {
+                    throw new Error(`Hubo un Error al Consumir la APi: ${seleccionarMenuPorNombre.status}`)
+                }
+
+                let jsonSeleccionarMenuPorNombre = await seleccionarMenuPorNombre.json();
+
+                if (jsonSeleccionarMenuPorNombre.status == true) {
+
+                    setDatosMenu(jsonSeleccionarMenuPorNombre.datos)
+
+                } else {
+
+                    console.log(jsonSeleccionarMenuPorNombre)
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "error",
+                        title: "Error al Buscar el Menu"
+                    });
+                }
+
+
+            } catch (error) {
+                console.log(`Error: ${error}`)
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "Hubo un Error"
+                });
+            }
+
+
+
+        }
+        else {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "info",
+                title: "Ingrese un texto para Buscar"
+            });
+        }
+
+
+
+
+    }
+
+    // -- FIN FUNCION --
+
+
     return (
         <>
             {/* ACA SE MUESTRA EL INVENTARIO */}
@@ -255,7 +428,7 @@ const Pedidos = () => {
 
                                 <li className="nav-item dropdown">
 
-                                    <a className="nav-link nav-icon iconoCarrito" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <a onClick={mandarDatosModalCarrito} className="nav-link nav-icon iconoCarrito" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" className="bi bi-cart4" viewBox="0 0 16 16">
                                             <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
                                         </svg>
@@ -296,8 +469,8 @@ const Pedidos = () => {
                                         <div className="col-sm-12 col-md-7 col-lg-7 col-xl-7">
                                             <div className="contenedorInputBusqueda">
                                                 <form className="d-flex">
-                                                    <input type="text" name="query" className="form-control search-input" placeholder="Buscar..." aria-label="Buscar" />
-                                                    <button type="button" className="btn btn-primary search-button btnAgregar">
+                                                    <input ref={inputBuscarMenu} type="text" name="query" className="form-control search-input" placeholder="Buscar..." aria-label="Buscar" />
+                                                    <button onClick={buscarMenu} type="button" className="btn btn-primary search-button btnAgregar">
                                                         <i className="bi bi-search"></i> Buscar
                                                     </button>
                                                 </form>
@@ -400,12 +573,12 @@ const Pedidos = () => {
                         <div className="row">
                             <div className="col">
                                 {/* <!-- Modal --> */}
-                                <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div className="modal-dialog modal-fullscreen">
                                         <div className="modal-content">
                                             <div className="modal-header headerPersonalizadoModal">
                                                 <h1 className="modal-title fs-5" id="exampleModalLabel">PEDIDOS DEL MENÚ</h1>
-                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button style={{ width: "85px" }} type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div className="modal-body modalPersonalizado">
                                                 <section className="section dashboard">
@@ -416,18 +589,110 @@ const Pedidos = () => {
                                                             <div className="col-sm-12 col-md-8 col-lg-8 col-xl-8">
                                                                 {/* <!-- Sales Card --> */}
                                                                 <div className="card info-card sales-card estiloPrincipalIzquierdo">
-                                                                    <div className="container no-items-container">
-                                                                        <img
-                                                                            src="imagenMesero.jpg"
-                                                                            alt="No items"
-                                                                            className="no-items-image"
-                                                                        />
-                                                                        <p className="no-items-text">No has Seleccionado Ningun Menú</p>
-                                                                    </div>
+
+                                                                    {
+
+                                                                        itemSeleccionados.length > 0 ? (
+
+                                                                            <div style={{ marginTop: "1px", marginLeft: "2px", marginRight: "2px" }} className="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4  g-4">
+
+
+                                                                                {
+                                                                                    itemSeleccionados.map((item, index) => (
+                                                                                        <div key={index} className="col">
+                                                                                            <div className="card h-100 cartCarrito">
+                                                                                                <img src={item.imagen} className="card-img-top" />
+                                                                                                <div style={{ height: "70px" }} className="card-body cartPersonalizadoModalCarrito">
+                                                                                                    <div className="tituloCartModalCarrito">
+                                                                                                        <h5 className="card-title">{item.nombre}</h5>
+
+                                                                                                    </div>
+                                                                                                    <div className="CantidadCartModalCarrito">
+                                                                                                        <p>Cantidad:{item.cantidad}</p>
+
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div className="card-footer footerCardPersonalizadoCarrito">
+                                                                                                    <div className="btnQuitar">
+                                                                                                        <button onMouseDown={() => { quitarItemCompleto(item.id) }}>Quitar</button>
+                                                                                                    </div>
+                                                                                                    <div className="contenDescripcion">
+                                                                                                        <p role="button"
+                                                                                                            data-bs-toggle="popover"
+                                                                                                            data-bs-placement="right"
+                                                                                                            data-bs-custom-class="custom-popover"
+                                                                                                            data-bs-title="Descripcion Menú"
+                                                                                                            data-bs-content={item.descripcion}>Descripcion</p>
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    )
+                                                                                    )
+
+                                                                                }
+                                                                            </div>
+                                                                        ) : (
+                                                                            <>
+                                                                                <div className="container no-items-container">
+                                                                                    <img
+                                                                                        src="imagenMesero.jpg"
+                                                                                        alt="No items"
+                                                                                        className="no-items-image"
+                                                                                    />
+                                                                                    <p className="no-items-text">No has Seleccionado Ningun Menú</p>
+                                                                                </div>
+                                                                            </>
+                                                                        )
+                                                                    }
+
                                                                 </div>
                                                             </div>
                                                             <div className="col-sm-12 col-md-4 col-lg-4 col-xl-4">
 
+                                                                <div className="tituloPago">
+                                                                    <h2>Descripcion Pedido</h2>
+                                                                </div>
+
+                                                                <div className="contenDatosPago">
+                                                                    <div className="form-floating mb-3">
+                                                                        <input ref={fechaActual} disabled type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                                                        <label htmlFor="floatingInput">Fecha</label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="contenDatosPago">
+                                                                    <label>Valor Total</label>
+                                                                    <div className="input-group mb-3">
+                                                                        <span className="input-group-text">$</span>
+                                                                        <input ref={valorTotal} disabled type="number" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="contenDatosPago">
+                                                                    <div className="form-floating">
+                                                                        <select
+                                                                            className="form-select"
+                                                                            id="floatingSelect"
+                                                                            aria-label="Floating label select example"
+                                                                            defaultValue="Pendiente"
+                                                                            ref={metodoPago}
+                                                                        >
+                                                                            <option value="Pendiente">Pendiente</option>
+                                                                            <option value="Efectivo">Efectivo</option>
+                                                                            <option value="Tarjeta">Tarjeta</option>
+                                                                            <option value="Transferencia">Transferencia</option>
+                                                                        </select>
+                                                                        <label htmlFor="floatingSelect">Seleccione el Metodo de Pago</label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="contenBotonPedido">
+                                                                    <button type="button" className="btn btn-primary">Realizar Pedido</button>
+
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
