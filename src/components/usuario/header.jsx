@@ -27,7 +27,6 @@ const Header = () => {
             // Decodificar el token sin verificar la firma
             const tokenDescodificado = jwtDecode(token);
             setDatosUsuario(tokenDescodificado.datos[0])
-            console.log(tokenDescodificado)
 
             const currentTime = Date.now() / 1000; // Convertir a segundos
             if (tokenDescodificado.exp < currentTime) {

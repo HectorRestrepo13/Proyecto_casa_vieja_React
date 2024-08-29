@@ -44,6 +44,9 @@ const Inventario = ({ setMenuDespliegue }) => {
                     case "Infantil":
                         llaveForanea = 6;
                         break;
+                    case "Menu del Dia":
+                        llaveForanea = 7;
+                        break;
                     default:
                         llaveForanea = null;
                 }
@@ -250,7 +253,9 @@ const Inventario = ({ setMenuDespliegue }) => {
                                         <li onClick={() => { setSeleccionarCategoriaMenu("Bebidas") }} className="breadcrumb-item item5">Bebidas</li>
                                         <li onClick={() => { setSeleccionarCategoriaMenu("Postres") }} className="breadcrumb-item item6">Postres</li>
                                         <li onClick={() => { setSeleccionarCategoriaMenu("Infantil") }} className="breadcrumb-item item6">Infantil</li>
+                                        <li onClick={() => { setSeleccionarCategoriaMenu("Menu del Dia") }} className="breadcrumb-item item6">Menu del Dia</li>
                                         <li onClick={() => { setSeleccionarCategoriaMenu("Inactivo") }} className="breadcrumb-item item6">Inactivos</li>
+
 
                                     </ol>
                                 </nav>

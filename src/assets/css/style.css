@@ -1283,7 +1283,7 @@ h6 {
   box-shadow: 3px 6px 1px 0px #8b7e74;
 
   font-family: "Times New Roman", Times, serif;
-  height: 280px;
+  height: 310px;
 }
 
 .titulo {
@@ -1691,4 +1691,51 @@ h6 {
 .CantidadCartModalCarrito p {
   color: #012970;
   margin: 0%;
+}
+
+/*  ACA VA IR EL ESTILO DEL RECEPCIONISTA */
+
+.btnDetalleTabla {
+  background-color: #012970;
+  font-size: 12px;
+  color: white;
+}
+
+/* ESTILO DE LA TABLA  */
+
+.table-custom {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.table-custom .rdt_TableRow {
+  background-color: #eaeaea;
+}
+
+.table-custom .rdt_TableHeadRow {
+  background-color: #ccc;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Estilos para la paginación */
+.table-custom .rdt_Pagination {
+  background-color: #f0f0f0;
+  color: rgb(0, 0, 0); /* Color del texto de la paginación */
+  border-top: 2px solid #ccc; /* Borde superior de la paginación */
+}
+
+/* Estilos para los botones de la paginación */
+.table-custom .rdt_Pagination button {
+  border: none; /* Quitar borde */
+  margin: 0 5px; /* Espaciado entre botones */
+  padding: 5px 10px; /* Espaciado dentro del botón */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+/* ESTILO PARA LA PAGINA CREAR NUEVO USUARIO */
+
+.datosUsuario {
+  width: 100%;
 }

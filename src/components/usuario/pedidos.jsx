@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
+import { jwtDecode } from "jwt-decode";
 
 
 const Pedidos = () => {
@@ -7,6 +8,10 @@ const Pedidos = () => {
     // este va hacer el que va almacenar el array de objetos de los Item seleccionados
     const [itemSeleccionados, setItemSeleccionados] = useState([]);
     const [seleccionarCategoriaMenu, setSeleccionarCategoriaMenu] = useState("Todos");
+
+    // este va hacer el que va guardar el id del menu del carrito para que muestre la descripcion que lleva
+    const [descripcionPlatillo, setDescripcionPlatillo] = useState(null);
+
     // aca se va guardar el menu que devuelve la API
     const [datosMenu, setDatosMenu] = useState(null);
 
@@ -45,6 +50,9 @@ const Pedidos = () => {
                         break;
                     case "Infantil":
                         llaveForanea = 6;
+                        break;
+                    case "Menu del Dia":
+                        llaveForanea = 7;
                         break;
                     default:
                         llaveForanea = null;
@@ -135,6 +143,8 @@ const Pedidos = () => {
 
     }
     // -- FIN FUNCION --
+
+
     useEffect(() => {
 
         seleccionarMenuCategoria(); // llamar la funcion
@@ -144,7 +154,6 @@ const Pedidos = () => {
 
 
     // Código para inicializar los popovers en Bootstrap ESTA EN "useEffect" para que se ejecute despues de que cargue todo
-
     useEffect(() => {
         // Código para inicializar los popovers en Bootstrap
         const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
@@ -154,13 +163,11 @@ const Pedidos = () => {
     }, [itemSeleccionados])
 
     // FUNCION PARA SELECCIONAR LOS ITEM QUE VA PEDIR EL USUARIO
-
     const seleccionarItem = (idMenu, nombreMenu, descripcionMenu, precioMenu, imagenMenu) => {
         try {
 
             let arregloObjetos = [...itemSeleccionados];
             let nuevoArreglo = new Array();
-
             if (arregloObjetos.length > 0) {
 
                 // este boolean es para saber si el Item que selecciono ya esta, entonces con el ciclo voy a recorrer todo
@@ -174,8 +181,9 @@ const Pedidos = () => {
                         arregloObjetos[index] = {
                             id: idMenu,
                             nombre: nombreMenu,
-                            descripcion: descripcionMenu,
+                            platillo: descripcionMenu,
                             precio: precioMenu,
+                            descripcion: null,
                             cantidad: item.cantidad + 1,
                             imagen: imagenMenu
                         };
@@ -189,7 +197,8 @@ const Pedidos = () => {
                     arregloObjetos.push({
                         id: idMenu,
                         nombre: nombreMenu,
-                        descripcion: descripcionMenu,
+                        platillo: descripcionMenu,
+                        descripcion: null,
                         precio: precioMenu,
                         cantidad: 1,
                         imagen: imagenMenu
@@ -205,7 +214,8 @@ const Pedidos = () => {
                 arregloObjetos.push({
                     id: idMenu,
                     nombre: nombreMenu,
-                    descripcion: descripcionMenu,
+                    platillo: descripcionMenu,
+                    descripcion: null,
                     precio: precioMenu,
                     cantidad: 1,
                     imagen: imagenMenu
@@ -237,11 +247,9 @@ const Pedidos = () => {
             });
         }
     }
-
     // -- FIN FUNCION --
 
     // FUNCION PARA MANDAR LOS DATOS AL MODAL 
-
     const mandarDatosModalCarrito = () => {
 
         const fecha = new Date();
@@ -262,12 +270,10 @@ const Pedidos = () => {
         }
 
     }
-
     // -- FIN FUNCION --
 
 
     // FUNCION PARA QUITAR EL ITEM COMPLETO DEL CARRITO
-
     const quitarItemCompleto = (idItemMenu) => {
 
         let arregloNuevo = [];
@@ -278,6 +284,7 @@ const Pedidos = () => {
                 arregloNuevo.push({
                     id: item.id,
                     nombre: item.nombre,
+                    platillo: item.platillo,
                     descripcion: item.descripcion,
                     precio: item.precio,
                     cantidad: item.cantidad,
@@ -301,7 +308,6 @@ const Pedidos = () => {
 
 
     // FUNCION PARA BUSCAR EL MENU POR EL NOMBRE 
-
     const buscarMenu = async () => {
 
         if (inputBuscarMenu.current.value != "") {
@@ -392,9 +398,237 @@ const Pedidos = () => {
 
 
     }
-
     // -- FIN FUNCION --
 
+
+    //  FUNCION PARA GUARDAR EL PEDIDO EN LA BASE DE DATOS
+    const guardarPedidoBaseDatos = async () => {
+
+        if (itemSeleccionados.length > 0) {
+
+            try {
+
+                // Decodificar el token, Aca Obtengo el ID del Usuario
+                const decoded = jwtDecode(localStorage.getItem("tokenUsuario"));
+
+                let arregloMenu = [];
+
+                // aca meto el menu en el arreglo para enviarlo con valores que pide la API
+                itemSeleccionados.map((menu) => {
+                    arregloMenu.push({
+                        cantidad: menu.cantidad,
+                        valorUnidad: menu.precio,
+                        MenuId: menu.id,
+                        descripcion: null
+                    })
+                })
+
+                let datosGeneralPedido = {
+                    valorTotal: valorTotal.current.value,
+                    metodoPago: metodoPago.current.value,
+                    UsuarioId: decoded.datos[0].id,
+                    datosMenu: arregloMenu,
+
+                }
+
+                // aca ya consumo la API y le envio los Datos
+                let insertarPedido = await fetch("http://localhost:3000/api/pedido/insertarPedido/",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("tokenUsuario")}`
+                        },
+                        body: JSON.stringify(datosGeneralPedido)
+                    }
+                )
+
+                if (!insertarPedido.ok) {
+                    throw new Error(`Hubo un Error al Insertar el Pedido en la API: ${insertarPedido.status}`)
+                }
+
+                let jsonInsertarPedido = await insertarPedido.json();
+
+                if (jsonInsertarPedido.status === true) {
+
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Pedido Guardado Exitosamente!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        window.location.reload();
+                    })
+
+                }
+                else {
+
+                    console.log(jsonInsertarPedido)
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "error",
+                        title: "Error al Guardar Pedido!!"
+                    });
+                }
+
+
+            } catch (error) {
+
+                console.log(jsonInsertarPedido)
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "Error al Guardar Pedido!!"
+                });
+
+            }
+
+
+
+        }
+        else {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "info",
+                title: "Primero Selecciona un Pedido"
+            });
+        }
+
+    }
+    // -- FIN FUNCION --
+
+    // FUNCION PARA MANDAR EL ID Y MOSTRAR LA DESCRIPCION DEL MENU DE COMO LO QUIEREN
+    // pendiente
+    const mostrarDescripcion = async (descripcionMenu, idMenu) => {
+
+
+        const { value: password } = await Swal.fire({
+            title: "Enter your password",
+            input: "password",
+            inputLabel: "Password",
+            inputPlaceholder: "Enter your password",
+            inputAttributes: {
+                maxlength: "10",
+                autocapitalize: "off",
+                autocorrect: "off"
+            }
+        });
+        if (password) {
+            Swal.fire(`Entered password: ${password}`);
+        }
+
+        // if (descripcionMenu == null) {
+
+
+
+
+
+
+        // const { value: text } = await Swal.fire({
+        //     input: "textarea",
+        //     inputLabel: "Descripcion Menu",
+        //     inputPlaceholder: "Escribe Aqui que quiere o no quiere El Cliente",
+        //     inputValue: descripcionMenu, // Aquí puedes establecer el valor inicial
+        //     inputAttributes: {
+        //         "aria-label": "Type your message here"
+        //     },
+        //     showCancelButton: true
+        // });
+
+        // if (text) {
+        //     Swal.fire(text);
+
+        // let copiaArreglo = [...itemSeleccionados]
+
+        // copiaArreglo.map((item, index) => {
+
+        //     if (item.id == idMenu) {
+        //         copiaArreglo[index] = {
+        //             id: item.id,
+        //             nombre: item.nombre,
+        //             platillo: item.platillo,
+        //             descripcion: text,
+        //             precio: item.precio,
+        //             cantidad: item.cantidad,
+        //             imagen: item.imagen
+        //         }
+        //     }
+
+        // })
+
+        // setItemSeleccionados(copiaArreglo)
+
+        // }
+        // }
+        // else {
+        //     const { value: text } = await Swal.fire({
+        //         input: "textarea",
+        //         inputLabel: "Descripcion Menu",
+        //         inputPlaceholder: "Escribe Aqui que quiere o no quiere El Cliente",
+        //         inputAttributes: {
+        //             "aria-label": "Type your message here"
+        //         },
+        //         showCancelButton: true
+        //     });
+
+        //     if (text) {
+        //         // Crear una copia del arreglo itemSeleccionados
+        //         let copiaArreglo = [...itemSeleccionados];
+
+        //         // Recorrer el arreglo para encontrar el elemento con el idMenu
+        //         copiaArreglo.forEach((item, index) => {
+        //             if (item.id === idMenu) {
+        //                 // Actualizar el elemento encontrado
+        //                 copiaArreglo[index] = {
+        //                     ...item, // Copiar todas las propiedades del item original
+        //                     descripcion: text // Actualizar solo la propiedad descripcion
+        //                 };
+        //             }
+        //         });
+
+        //         // Actualizar el estado con la copia modificada del arreglo
+        //         setItemSeleccionados(copiaArreglo);
+        //     }
+        // }
+
+
+
+    }
+
+    // -- FIN FUNCION --
 
     return (
         <>
@@ -414,6 +648,8 @@ const Pedidos = () => {
                                 <li onClick={() => { setSeleccionarCategoriaMenu("Bebidas") }} className="breadcrumb-item item5">Bebidas</li>
                                 <li onClick={() => { setSeleccionarCategoriaMenu("Postres") }} className="breadcrumb-item item6">Postres</li>
                                 <li onClick={() => { setSeleccionarCategoriaMenu("Infantil") }} className="breadcrumb-item item6">Infantil</li>
+                                <li onClick={() => { setSeleccionarCategoriaMenu("Menu del Dia") }} className="breadcrumb-item item6">Menu del Dia</li>
+
 
 
                             </ol>
@@ -573,7 +809,7 @@ const Pedidos = () => {
                         <div className="row">
                             <div className="col">
                                 {/* <!-- Modal --> */}
-                                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel">
                                     <div className="modal-dialog modal-fullscreen">
                                         <div className="modal-content">
                                             <div className="modal-header headerPersonalizadoModal">
@@ -589,7 +825,6 @@ const Pedidos = () => {
                                                             <div className="col-sm-12 col-md-8 col-lg-8 col-xl-8">
                                                                 {/* <!-- Sales Card --> */}
                                                                 <div className="card info-card sales-card estiloPrincipalIzquierdo">
-
                                                                     {
 
                                                                         itemSeleccionados.length > 0 ? (
@@ -610,6 +845,7 @@ const Pedidos = () => {
                                                                                                     <div className="CantidadCartModalCarrito">
                                                                                                         <p>Cantidad:{item.cantidad}</p>
 
+
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div className="card-footer footerCardPersonalizadoCarrito">
@@ -622,10 +858,19 @@ const Pedidos = () => {
                                                                                                             data-bs-placement="right"
                                                                                                             data-bs-custom-class="custom-popover"
                                                                                                             data-bs-title="Descripcion Menú"
-                                                                                                            data-bs-content={item.descripcion}>Descripcion</p>
+                                                                                                            data-bs-content={item.descripcion != null ? item.descripcion : "No Tiene Nada Nuevo Agregado"}>Platillo</p>
+
+
+
+                                                                                                        <p onClick={() => { mostrarDescripcion(item.descripcion, item.id) }} style={{ marginLeft: "auto" }} >Descripcion</p>
                                                                                                     </div>
 
+
                                                                                                 </div>
+
+
+
+
                                                                                             </div>
                                                                                         </div>
 
@@ -690,8 +935,7 @@ const Pedidos = () => {
                                                                 </div>
 
                                                                 <div className="contenBotonPedido">
-                                                                    <button type="button" className="btn btn-primary">Realizar Pedido</button>
-
+                                                                    <button onClick={guardarPedidoBaseDatos} type="button" className="btn btn-primary">Realizar Pedido</button>
                                                                 </div>
                                                             </div>
                                                         </div>
