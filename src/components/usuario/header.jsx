@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode'
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ setMenuDespliegue }) => {
 
     const [datosUsuario, setDatosUsuario] = useState(null);
     let navigate = useNavigate();
@@ -71,12 +71,12 @@ const Header = () => {
                 </div>
                 {/* <!-- End Logo --> */}
 
-                <div className="search-bar">
+                {/* <div className="search-bar">
                     <form className="search-form d-flex align-items-center" method="POST" action="#">
                         <input type="text" name="query" placeholder="Buscar" title="Enter search keyword" />
                         <button type="submit" title="Search"><i className="bi bi-search"></i></button>
                     </form>
-                </div>
+                </div> */}
                 {/* <!-- End Search Bar --> */}
 
                 <nav className="header-nav ms-auto">
@@ -91,78 +91,7 @@ const Header = () => {
 
                         <li className="nav-item dropdown">
 
-                            <a className="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                                <i className="bi bi-bell"></i>
-                                <span className="badge bg-primary badge-number">4</span>
-                            </a>
-                            {/* <!-- End Notification Icon --> */}
 
-                            <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                                <li className="dropdown-header">
-                                    You have 4 new notifications
-                                    <a href="#"><span className="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-
-                                <li className="notification-item">
-                                    <i className="bi bi-exclamation-circle text-warning"></i>
-                                    <div>
-                                        <h4>Lorem Ipsum</h4>
-                                        <p>Quae dolorem earum veritatis oditseno</p>
-                                        <p>30 min. ago</p>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-
-                                <li className="notification-item">
-                                    <i className="bi bi-x-circle text-danger"></i>
-                                    <div>
-                                        <h4>Atque rerum nesciunt</h4>
-                                        <p>Quae dolorem earum veritatis oditseno</p>
-                                        <p>1 hr. ago</p>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-
-                                <li className="notification-item">
-                                    <i className="bi bi-check-circle text-success"></i>
-                                    <div>
-                                        <h4>Sit rerum fuga</h4>
-                                        <p>Quae dolorem earum veritatis oditseno</p>
-                                        <p>2 hrs. ago</p>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-
-                                <li className="notification-item">
-                                    <i className="bi bi-info-circle text-primary"></i>
-                                    <div>
-                                        <h4>Dicta reprehenderit</h4>
-                                        <p>Quae dolorem earum veritatis oditseno</p>
-                                        <p>4 hrs. ago</p>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-                                <li className="dropdown-footer">
-                                    <a href="#">Show all notifications</a>
-                                </li>
-
-                            </ul>
-                            {/* <!-- End Notification Dropdown Items --> */}
 
                         </li>
                         {/* <!-- End Notification Nav --> */}
@@ -188,8 +117,8 @@ const Header = () => {
                                     <a href="#">
                                         <img src="assets/img/messages-1.jpg" alt="" className="rounded-circle" />
                                         <div>
-                                            <h4>Maria Hudson</h4>
-                                            <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                            <h4>ADMINISTRACION</h4>
+                                            <p>Demuestra Siempre Tu Mejor Esfuerzo y Sera Conpensado...</p>
                                             <p>4 hrs. ago</p>
                                         </div>
                                     </a>
@@ -202,8 +131,8 @@ const Header = () => {
                                     <a href="#">
                                         <img src="assets/img/messages-2.jpg" alt="" className="rounded-circle" />
                                         <div>
-                                            <h4>Anna Nelson</h4>
-                                            <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                            <h4>Cliente</h4>
+                                            <p>Siempre has el bien sin mirar a Quien...</p>
                                             <p>6 hrs. ago</p>
                                         </div>
                                     </a>
@@ -216,8 +145,8 @@ const Header = () => {
                                     <a href="#">
                                         <img src="assets/img/messages-3.jpg" alt="" className="rounded-circle" />
                                         <div>
-                                            <h4>David Muldon</h4>
-                                            <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+                                            <h4>Hector Restrepo</h4>
+                                            <p>El Cliente Siempre Tiene la Razon ...</p>
                                             <p>8 hrs. ago</p>
                                         </div>
                                     </a>
@@ -226,9 +155,7 @@ const Header = () => {
                                     <hr className="dropdown-divider" />
                                 </li>
 
-                                <li className="dropdown-footer">
-                                    <a href="#">Show all messages</a>
-                                </li>
+
 
                             </ul>
                             {/* <!-- End Messages Dropdown Items --> */}
@@ -252,9 +179,8 @@ const Header = () => {
                                 <li>
                                     <hr className="dropdown-divider" />
                                 </li>
-
                                 <li>
-                                    <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                    <a onClick={() => { setMenuDespliegue("verPerfilUsuario") }} className="dropdown-item d-flex align-items-center">
                                         <i className="bi bi-person"></i>
                                         <span>Mi Perfil</span>
                                     </a>

@@ -1739,3 +1739,84 @@ h6 {
 .datosUsuario {
   width: 100%;
 }
+
+/*  ESTILO PARA LA PAGINA DE "graficas" */
+
+.tituloGrafica {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.subTituloGrafica {
+  color: #1349a5;
+  font-weight: bolder;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.contenedorFecha {
+  margin-top: 15px;
+  display: flex;
+}
+
+.seleccionarAno {
+  margin-left: auto;
+  margin-right: 10px;
+  width: 110px;
+}
+
+.seleccionarMes {
+  width: 120px;
+}
+
+/*  ACA VA IR EL DISEÑO DE LA DESCRIPCION DEL PEDIDO DEL MODAL */
+
+.contenBotonDescripcion {
+  display: flex;
+  margin-top: 20px;
+}
+
+.btnCancelarDescripcion {
+  width: 48%;
+}
+.btnCancelarDescripcion button {
+  width: 100%;
+  background-color: #b12a25;
+  font-family: "Times New Roman", Times, serif;
+  border: none;
+}
+
+.btnGuardarDescripcion {
+  width: 48%;
+  margin-left: auto;
+}
+
+.btnGuardarDescripcion button {
+  width: 100%;
+  background-color: #012970;
+}
+
+/* ESTILO PARA LA PAGINA VER PERFIL */
+
+.contenDatosUsuaeio {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ESTILO DE LA PANTALLA DE LA COCINA  */
+
+.descripcionPedido {
+  display: flex;
+}
+
+.contenedorHeaderPedido {
+  display: flex;
+}
+
+.headerPedido {
+  margin-left: 10px;
+}
+.descripcionPedido {
+  display: flex;
+  justify-content: center;
+}

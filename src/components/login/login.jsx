@@ -36,6 +36,7 @@ const Login = () => {
                 }
 
                 let jsonRespuesta = await respuestaAPI.json();
+                console.log(jsonRespuesta)
                 setRecargaIniciarSesion(false);
 
                 if (jsonRespuesta.status == true) {

@@ -9,16 +9,21 @@ const Pedidos = () => {
     const [itemSeleccionados, setItemSeleccionados] = useState([]);
     const [seleccionarCategoriaMenu, setSeleccionarCategoriaMenu] = useState("Todos");
 
+    // ESTE useState ES PARA SABER SI EL USUARIO QUIERE VER LA DESCRIPCION O EDITARLA 
+    const [editarDescripcionPedido, setEditarDescripcionPedido] = useState(null);
+
     // este va hacer el que va guardar el id del menu del carrito para que muestre la descripcion que lleva
     const [descripcionPlatillo, setDescripcionPlatillo] = useState(null);
 
     // aca se va guardar el menu que devuelve la API
     const [datosMenu, setDatosMenu] = useState(null);
 
-    let fechaActual = useRef();
-    let valorTotal = useRef();
-    let metodoPago = useRef();
-    let inputBuscarMenu = useRef();
+    let datosDescripcionPedido = useRef(null);
+    let tiutloNombrePlatillo = useRef(null)
+    let fechaActual = useRef(null);
+    let valorTotal = useRef(null);
+    let metodoPago = useRef(null);
+    let inputBuscarMenu = useRef(null);
 
 
     // FUNCION PARA SELECCIONAR EL MENU
@@ -274,7 +279,7 @@ const Pedidos = () => {
 
 
     // FUNCION PARA QUITAR EL ITEM COMPLETO DEL CARRITO
-    const quitarItemCompleto = (idItemMenu) => {
+    const quitarItemCompleto = async (idItemMenu) => {
 
         let arregloNuevo = [];
         let valorItemQuitar = 0;
@@ -298,7 +303,13 @@ const Pedidos = () => {
         })
 
 
+        if (editarDescripcionPedido != null) {
+            await setEditarDescripcionPedido(null)
+            mandarDatosModalCarrito()
+
+        }
         valorTotal.current.value = valorTotal.current.value - valorItemQuitar
+
 
         setItemSeleccionados(arregloNuevo)
 
@@ -419,7 +430,7 @@ const Pedidos = () => {
                         cantidad: menu.cantidad,
                         valorUnidad: menu.precio,
                         MenuId: menu.id,
-                        descripcion: null
+                        descripcion: menu.descripcion
                     })
                 })
 
@@ -532,102 +543,77 @@ const Pedidos = () => {
 
     // FUNCION PARA MANDAR EL ID Y MOSTRAR LA DESCRIPCION DEL MENU DE COMO LO QUIEREN
     // pendiente
-    const mostrarDescripcion = async (descripcionMenu, idMenu) => {
+    const mostrarDescripcion = async (descripcionMenu, idMenu, nombreMenu) => {
 
+        await setEditarDescripcionPedido(idMenu)
+        datosDescripcionPedido.current.value = ""
 
-        const { value: password } = await Swal.fire({
-            title: "Enter your password",
-            input: "password",
-            inputLabel: "Password",
-            inputPlaceholder: "Enter your password",
-            inputAttributes: {
-                maxlength: "10",
-                autocapitalize: "off",
-                autocorrect: "off"
-            }
-        });
-        if (password) {
-            Swal.fire(`Entered password: ${password}`);
+        tiutloNombrePlatillo.current.innerText = nombreMenu
+
+        if (descripcionMenu != null) {
+
+            datosDescripcionPedido.current.value = descripcionMenu
+
         }
-
-        // if (descripcionMenu == null) {
-
-
-
-
-
-
-        // const { value: text } = await Swal.fire({
-        //     input: "textarea",
-        //     inputLabel: "Descripcion Menu",
-        //     inputPlaceholder: "Escribe Aqui que quiere o no quiere El Cliente",
-        //     inputValue: descripcionMenu, // Aquí puedes establecer el valor inicial
-        //     inputAttributes: {
-        //         "aria-label": "Type your message here"
-        //     },
-        //     showCancelButton: true
-        // });
-
-        // if (text) {
-        //     Swal.fire(text);
-
-        // let copiaArreglo = [...itemSeleccionados]
-
-        // copiaArreglo.map((item, index) => {
-
-        //     if (item.id == idMenu) {
-        //         copiaArreglo[index] = {
-        //             id: item.id,
-        //             nombre: item.nombre,
-        //             platillo: item.platillo,
-        //             descripcion: text,
-        //             precio: item.precio,
-        //             cantidad: item.cantidad,
-        //             imagen: item.imagen
-        //         }
-        //     }
-
-        // })
-
-        // setItemSeleccionados(copiaArreglo)
-
-        // }
-        // }
-        // else {
-        //     const { value: text } = await Swal.fire({
-        //         input: "textarea",
-        //         inputLabel: "Descripcion Menu",
-        //         inputPlaceholder: "Escribe Aqui que quiere o no quiere El Cliente",
-        //         inputAttributes: {
-        //             "aria-label": "Type your message here"
-        //         },
-        //         showCancelButton: true
-        //     });
-
-        //     if (text) {
-        //         // Crear una copia del arreglo itemSeleccionados
-        //         let copiaArreglo = [...itemSeleccionados];
-
-        //         // Recorrer el arreglo para encontrar el elemento con el idMenu
-        //         copiaArreglo.forEach((item, index) => {
-        //             if (item.id === idMenu) {
-        //                 // Actualizar el elemento encontrado
-        //                 copiaArreglo[index] = {
-        //                     ...item, // Copiar todas las propiedades del item original
-        //                     descripcion: text // Actualizar solo la propiedad descripcion
-        //                 };
-        //             }
-        //         });
-
-        //         // Actualizar el estado con la copia modificada del arreglo
-        //         setItemSeleccionados(copiaArreglo);
-        //     }
-        // }
-
 
 
     }
 
+    // -- FIN FUNCION --
+
+    // FUNCION PARA GUARDAR LA NUEVA DESCRIPCION DEL PLATILLO
+
+    const guardarDescripcionNueva = () => {
+
+        if (datosDescripcionPedido.current.value != "") {
+
+
+            let copiaArreglo = [...itemSeleccionados]
+
+            copiaArreglo.map(async (item, index) => {
+
+                if (item.id == editarDescripcionPedido) {
+                    copiaArreglo[index] = {
+                        id: item.id,
+                        nombre: item.nombre,
+                        platillo: item.platillo,
+                        descripcion: datosDescripcionPedido.current.value,
+                        precio: item.precio,
+                        cantidad: item.cantidad,
+                        imagen: item.imagen
+                    }
+                    await setEditarDescripcionPedido(null)
+                    mandarDatosModalCarrito()
+                }
+
+            })
+
+            setItemSeleccionados(copiaArreglo)
+        }
+        else {
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "warning",
+                title: "No tiene Ninguna Descripcion"
+            });
+
+        }
+
+
+
+
+    }
     // -- FIN FUNCION --
 
     return (
@@ -862,7 +848,7 @@ const Pedidos = () => {
 
 
 
-                                                                                                        <p onClick={() => { mostrarDescripcion(item.descripcion, item.id) }} style={{ marginLeft: "auto" }} >Descripcion</p>
+                                                                                                        <p onClick={() => { mostrarDescripcion(item.descripcion, item.id, item.nombre) }} style={{ marginLeft: "auto" }} >Descripcion</p>
                                                                                                     </div>
 
 
@@ -897,46 +883,89 @@ const Pedidos = () => {
                                                             </div>
                                                             <div className="col-sm-12 col-md-4 col-lg-4 col-xl-4">
 
-                                                                <div className="tituloPago">
-                                                                    <h2>Descripcion Pedido</h2>
-                                                                </div>
+                                                                {
+                                                                    editarDescripcionPedido === null ? (
+                                                                        <>
+                                                                            <div className="tituloPago">
+                                                                                <h2>Datos Pedido</h2>
+                                                                            </div>
 
-                                                                <div className="contenDatosPago">
-                                                                    <div className="form-floating mb-3">
-                                                                        <input ref={fechaActual} disabled type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                                        <label htmlFor="floatingInput">Fecha</label>
-                                                                    </div>
-                                                                </div>
+                                                                            <div className="contenDatosPago">
+                                                                                <div className="form-floating mb-3">
+                                                                                    <input ref={fechaActual} disabled type="text" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                                                                    <label htmlFor="floatingInput">Fecha</label>
+                                                                                </div>
+                                                                            </div>
 
-                                                                <div className="contenDatosPago">
-                                                                    <label>Valor Total</label>
-                                                                    <div className="input-group mb-3">
-                                                                        <span className="input-group-text">$</span>
-                                                                        <input ref={valorTotal} disabled type="number" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                                                                    </div>
-                                                                </div>
+                                                                            <div className="contenDatosPago">
+                                                                                <label>Valor Total</label>
+                                                                                <div className="input-group mb-3">
+                                                                                    <span className="input-group-text">$</span>
+                                                                                    <input ref={valorTotal} disabled type="number" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                                                                                </div>
+                                                                            </div>
 
-                                                                <div className="contenDatosPago">
-                                                                    <div className="form-floating">
-                                                                        <select
-                                                                            className="form-select"
-                                                                            id="floatingSelect"
-                                                                            aria-label="Floating label select example"
-                                                                            defaultValue="Pendiente"
-                                                                            ref={metodoPago}
-                                                                        >
-                                                                            <option value="Pendiente">Pendiente</option>
-                                                                            <option value="Efectivo">Efectivo</option>
-                                                                            <option value="Tarjeta">Tarjeta</option>
-                                                                            <option value="Transferencia">Transferencia</option>
-                                                                        </select>
-                                                                        <label htmlFor="floatingSelect">Seleccione el Metodo de Pago</label>
-                                                                    </div>
-                                                                </div>
+                                                                            <div className="contenDatosPago">
+                                                                                <div className="form-floating">
+                                                                                    <select
+                                                                                        className="form-select"
+                                                                                        id="floatingSelect"
+                                                                                        aria-label="Floating label select example"
+                                                                                        defaultValue="Pendiente"
+                                                                                        ref={metodoPago}
+                                                                                    >
+                                                                                        <option value="Pendiente">Pendiente</option>
+                                                                                        <option value="Efectivo">Efectivo</option>
+                                                                                        <option value="Tarjeta">Tarjeta</option>
+                                                                                        <option value="Transferencia">Transferencia</option>
+                                                                                    </select>
+                                                                                    <label htmlFor="floatingSelect">Seleccione el Metodo de Pago</label>
+                                                                                </div>
+                                                                            </div>
 
-                                                                <div className="contenBotonPedido">
-                                                                    <button onClick={guardarPedidoBaseDatos} type="button" className="btn btn-primary">Realizar Pedido</button>
-                                                                </div>
+                                                                            <div className="contenBotonPedido">
+                                                                                <button onClick={guardarPedidoBaseDatos} type="button" className="btn btn-primary">Realizar Pedido</button>
+                                                                            </div>
+
+                                                                        </>
+                                                                    ) :
+                                                                        (
+                                                                            <>
+                                                                                <div className="tituloPago">
+                                                                                    <h2>Descripcion del Platillo</h2>
+                                                                                </div>
+                                                                                <div className="tituloPago">
+                                                                                    <h2 ref={tiutloNombrePlatillo}></h2>
+                                                                                </div>
+
+                                                                                <div className="contenDatosPago">
+                                                                                    <label style={{ marginBottom: "15px" }}>Especifica qué deseas modificar en el platillo, ya sea agregar o quitar algún ingrediente</label>
+                                                                                    <div className="form-floating">
+                                                                                        <textarea ref={datosDescripcionPedido} className="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style={{ height: "80px" }}></textarea>
+                                                                                        <label htmlFor="floatingTextarea2">Escribir Descripcion del Platillo...</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="contenBotonDescripcion">
+                                                                                    <div className="btnCancelarDescripcion">
+                                                                                        <button onClick={async () => {
+                                                                                            await setEditarDescripcionPedido(null)
+
+                                                                                            mandarDatosModalCarrito()
+                                                                                        }} type="button" className="btn btn-primary">Cancelar Descripcion</button>
+
+                                                                                    </div>
+                                                                                    <div className="btnGuardarDescripcion">
+                                                                                        <button onClick={guardarDescripcionNueva} type="button" className="btn btn-primary">Guardar Descripcion</button>
+
+                                                                                    </div>
+
+                                                                                </div>
+
+                                                                            </>
+                                                                        )
+                                                                }
+
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -952,6 +981,7 @@ const Pedidos = () => {
                             </div>
                         </div>
                         {/* FIN MODAL */}
+
                     </div>
                 </section >
                 {/* <!-- FIN PAGINA CART --> */}

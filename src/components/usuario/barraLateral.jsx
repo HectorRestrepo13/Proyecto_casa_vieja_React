@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
 
 
     const [datosUsuario, setDatosUsuario] = useState(4);
-
+    let navigate = useNavigate();
 
     // FUNCION PARA OBTENER LOS DATOS DEL USUARIO
     const obtenerDatosUsuario = () => {
@@ -43,6 +45,33 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
 
 
     }
+
+    // -- FIN FUNCION --
+
+    // FUNCION PARA SALIR 
+
+    const salirAlLogin = () => {
+
+
+        Swal.fire({
+            title: "Estas Seguro que Deseas Salir?",
+            text: "Tendras que Volver a Iniciar Sesion!",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, Salir!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigate("/")
+            }
+        });
+
+
+    }
+
+
+    // -- FIN FUNCION --
 
     useEffect(() => {
         obtenerDatosUsuario();
@@ -101,6 +130,22 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
 
                         </>) : (<></>)
                     }
+
+
+                    {
+                        // pagina de Eventos
+
+                        datosUsuario == 4 || datosUsuario == 1 || datosUsuario == 2 ? (<>
+
+                            <li onClick={() => { setMenuDespliegue("organizadorEventos") }} className="nav-item">
+                                <a style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "organizadorEventos" ? "nav-link" : "nav-link collapsed"} data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                                    <i className="bi bi-calendar2-event"></i><span>Eventos</span>
+                                </a>
+
+                            </li>
+
+                        </>) : (<></>)
+                    }
                     {
                         // pagina del ADMIN
 
@@ -117,15 +162,11 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a onClick={() => { setMenuDespliegue("Graficas") }} href="#">
                                             <i className="bi bi-circle"></i><span>Graficas</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="icons-boxicons.html">
-                                            <i className="bi bi-circle"></i><span>Boxicons</span>
-                                        </a>
-                                    </li>
+
                                 </ul>
                             </li>
 
@@ -140,31 +181,25 @@ const BarraLateral = ({ menuDespliegue, setMenuDespliegue }) => {
                     <li className="nav-heading">Paginas</li>
 
                     <li className="nav-item">
-                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="users-profile.html">
+                        <a onClick={() => { setMenuDespliegue("verPerfilUsuario") }} style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "verPerfilUsuario" ? "nav-link" : "nav-link collapsed"}>
                             <i className="bi bi-person"></i>
                             <span>Perfil</span>
                         </a>
                     </li>
                     {/* <!-- End Profile Page Nav --> */}
 
-                    <li className="nav-item">
-                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="pages-contact.html">
-                            <i className="bi bi-envelope"></i>
-                            <span>Contacto</span>
-                        </a>
-                    </li>
-                    {/* <!-- End Contact Page Nav --> */}
+
 
                     <li className="nav-item">
-                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="pages-register.html">
+                        <a onClick={() => { setMenuDespliegue("pantallaCocina") }} style={{ backgroundColor: "#F5EDEB" }} className={menuDespliegue == "pantallaCocina" ? "nav-link" : "nav-link collapsed"}>
                             <i className="bi bi-card-list"></i>
-                            <span>Registrar</span>
+                            <span>Pantalla Cocina</span>
                         </a>
                     </li>
                     {/* <!-- End Register Page Nav --> */}
 
                     <li className="nav-item">
-                        <a style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" href="pages-login.html">
+                        <a onClick={salirAlLogin} style={{ backgroundColor: "#F5EDEB" }} className="nav-link collapsed" >
                             <i className="bi bi-box-arrow-in-right"></i>
                             <span>Salir</span>
                         </a>
