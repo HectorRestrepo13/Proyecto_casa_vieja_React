@@ -179,10 +179,10 @@ const Inventario = ({ setMenuDespliegue }) => {
                     icon: "success",
                     title: jsonUpdate.descripcion,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1000
                 }).then(() => {
 
-                    window.location.reload();
+                    seleccionarMenuCategoria();
                 })
 
             }

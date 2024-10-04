@@ -1,6 +1,6 @@
 import { Scheduler } from "@aldabil/react-scheduler";
 import { message } from 'antd';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import DataTable from 'react-data-table-component';
 
 
@@ -11,20 +11,102 @@ const Eventos = () => {
     const [EVENTS, setEVENTS] = useState([]);
     const [modoEvento, setModoEvento] = useState("calendario");
     const [datosTable, setDatosTable] = useState([])
+    const [copiaDatosTable, setCopiaDatosTable] = useState([])
+
+
+    // definicion de los Input
+    let nombreEvento = useRef(null)
+    let nombreCliente = useRef(null)
+    let cantidadPersonasModal = useRef(null)
+    let abono = useRef(null)
+    let valorEvento = useRef(null)
+    let telefonoCliente = useRef(null)
+    let emailCliente = useRef(null)
+    let fechaInicio = useRef(null)
+    let fechaFin = useRef(null)
+    let descripcion = useRef(null)
+    let estadoModal = useRef(null)
+
+
+
 
 
     // Definición de las columnas de la tabla
     const columns = [
+
         {
-            name: 'ID', // Nombre de la columna
-            selector: row => row.id, // Selecciona el campo 'name' del objeto de datos
-            sortable: true, // Permite ordenar esta columna
-        },
-        {
-            name: 'Cedula', // Nombre de la columna
+            name: 'Nombre Evento', // Nombre de la columna
             selector: row => row.nombreEvento, // Selecciona el campo 'name' del objeto de datos
             sortable: true, // Permite ordenar esta columna
         },
+        {
+            name: 'Nombre Cliente', // Nombre de la columna
+            selector: row => row.nombrePersona, // Selecciona el campo 'name' del objeto de datos
+            sortable: true, // Permite ordenar esta columna
+            cell: row => (
+                <span
+                    style={{
+                        width: "300px"
+                    }}
+                >
+                    {row.nombrePersona}
+                </span>
+            ),
+        },
+        {
+            name: 'Fecha Inicio', // Nombre de la columna
+            selector: row => {
+                const date = new Date(row.fechaInicio);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}`;
+            },
+        },
+        {
+            name: 'Fecha Fin', // Nombre de la columna
+            selector: row => {
+                const date = new Date(row.fechaFin);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}`;
+            },
+        },
+        {
+            name: 'Estado', // Nombre de la columna
+            selector: row => row.estado, // Selecciona el campo 'name' del objeto de datos
+            sortable: true, // Permite ordenar esta columna
+            cell: row => (
+                <span
+                    style={{
+                        color: row.estado == "activo" || row.estado == "Activo" ? 'green' : 'red',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {row.estado}
+                </span>
+            ), // Cambia el color basado en el valor de 'estado'
+        },
+        {
+            name: 'Acciones', // Nueva columna para el botón
+            cell: row => (
+
+                <div className="btn-group dropend">
+                    <button onClick={() => { mandarDatosModal(row.nombreEvento, row.nombrePersona, row.cantidadPersonas, row.abono, row.valorEvento, row.fechaInicio, row.fechaFin, row.descripcion, row.estado, row.telefonoReservante, row.emailReservante) }} type="button" className="btn btn-primary  btnDetalleTabla" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever>
+                        Ver mas..
+                    </button>
+
+                </div>
+            ),
+            ignoreRowClick: true, // Ignora el click en la fila para que solo el botón maneje el evento
+
+        },
+
 
 
     ];
@@ -58,8 +140,8 @@ const Eventos = () => {
             if (jsonEventos.status == "success") {
 
                 if (modoEvento === "tabla") {
-                    // Pendiente para llenar la tabla con estos datos
                     setDatosTable(jsonEventos.data)
+                    setCopiaDatosTable(jsonEventos.data)
 
                 }
                 else if (modoEvento === "calendario") {
@@ -313,24 +395,51 @@ const Eventos = () => {
     // -- FIN FUNCION --
 
 
-    // FUNCION PARA ELIMINAR EL EVENTO
 
-    const handleDelete = async (e) => {
+    // FUNCION PARA BUSCAR POR NOMBRE DEL EVENTO 
+    const buscarTablaPedidos = (e) => {
 
-
-
-        try {
-            const response = await fetch(`/api/events/${deletedId}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                console.log('Event deleted successfully');
-            } else {
-                console.error('Failed to delete event');
-            }
-        } catch (error) {
-            console.error('Error:', error);
+        if (e.target.value != "") {
+            const filtrarDatos = datosTable.filter(dato => {
+                return dato.nombreEvento.toLowerCase().includes(e.target.value.toLowerCase())
+            })
+            setDatosTable(filtrarDatos)
         }
+        else {
+            setDatosTable(copiaDatosTable)
+        }
+
+
+    }
+
+    // -- FIN FUNCION --
+
+
+    // FUNCION PARA MANDAR LOS DATOS AL MODAL
+
+    const mandarDatosModal = (nombreEven, nombreClien, cantidadPer, abonoEvento, valorTo, fechaIni, fechaFi, descripcionEven, estadoEven, telefonoEven, emailEven) => {
+
+        nombreEvento.current.value = nombreEven
+        nombreCliente.current.value = nombreClien
+        cantidadPersonasModal.current.value = cantidadPer
+        abono.current.value = abonoEvento
+        valorEvento.current.value = valorTo
+        descripcion.current.value = descripcionEven
+        telefonoCliente.current.value = telefonoEven
+        emailCliente.current.value = emailEven
+        estadoModal.current.value = estadoEven
+
+        const inicio = new Date(fechaIni);
+        let fechaInicioFormateada = `${inicio.getFullYear()}-${String(inicio.getMonth() + 1).padStart(2, '0')}-${String(inicio.getDate()).padStart(2, '0')} ${String(inicio.getHours()).padStart(2, '0')}:${String(inicio.getMinutes()).padStart(2, '0')}`;
+
+
+        const fin = new Date(fechaFi);
+        let fechaFinFormateada = `${fin.getFullYear()}-${String(fin.getMonth() + 1).padStart(2, '0')}-${String(fin.getDate()).padStart(2, '0')} ${String(fin.getHours()).padStart(2, '0')}:${String(fin.getMinutes()).padStart(2, '0')}`;
+
+        fechaFin.current.innerText = fechaFinFormateada
+        fechaInicio.current.innerText = fechaInicioFormateada
+
+
     }
 
     // -- FIN FUNCION --
@@ -423,7 +532,6 @@ const Eventos = () => {
                                                                 }
                                                             ]}
                                                             onConfirm={handleConfirm}
-                                                            onDelete={handleDelete}
 
                                                         />
                                                     </div>
@@ -431,16 +539,16 @@ const Eventos = () => {
                                                 </div>
                                             </>) : (
                                             <>
-                                                {/* <div style={{ marginLeft: "20px", marginTop: "20px", display: "flex", justifyContent: "space-between", marginBottom: "10px" }} className="row">
+                                                <div style={{ marginLeft: "20px", marginTop: "20px", display: "flex", justifyContent: "space-between", marginBottom: "10px" }} className="row">
 
                                                     <div style={{ marginLeft: "50%" }} className="col">
                                                         <div className="input-group flex-nowrap">
                                                             <span className="input-group-text" id="addon-wrapping">@</span>
-                                                            <input onChange={buscarTablaPedidos} style={{ marginRight: "20px" }} type="text" className="form-control" placeholder="Buscar por Nombre:" aria-label="Username" aria-describedby="addon-wrapping" />
+                                                            <input onChange={buscarTablaPedidos} style={{ marginRight: "20px" }} type="text" className="form-control" placeholder="Nombre Del Evento:" aria-label="Username" aria-describedby="addon-wrapping" />
                                                         </div>
                                                     </div>
-                                                </div> */}
-                                                <div style={{ marginLeft: "20px", marginBottom: "40px", marginRight: "20px" }} className="row">
+                                                </div>
+                                                <div style={{ marginLeft: "20px", marginBottom: "40px", marginRight: "20px", marginTop: "20px" }} className="row">
                                                     <div className="table-responsive table-custom">
                                                         <DataTable
                                                             columns={columns} // Define las columnas que se mostrarán
@@ -448,6 +556,104 @@ const Eventos = () => {
                                                             pagination // Habilita la paginación
                                                             persistTableHead // Mantiene visible el encabezado de la tabla
                                                         />
+                                                    </div>
+                                                </div>
+
+                                                {/* DATOS DEL MODAL */}
+                                                <div className="row">
+                                                    <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div className="modal-dialog  modal-lg">
+                                                            <div className="modal-content">
+                                                                <div className="modal-header">
+                                                                    <h1 className="modal-title fs-5" id="exampleModalLabel">Datos Del Evento</h1>
+                                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div className="modal-body">
+                                                                    <form>
+                                                                        <div className="mb-2" style={{ display: "flex", justifyContent: "space-between" }}>
+
+                                                                            <div className="mb-2" style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Fecha Inicio:</label>
+                                                                                <label ref={fechaInicio} htmlFor="recipient-name" className="col-form-label">2024-05-12</label>
+                                                                            </div>
+
+
+                                                                            <div className="mb-2" style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Fecha Fin:</label>
+                                                                                <label ref={fechaFin} htmlFor="recipient-name" className="col-form-label">2024-05-12</label>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                        <div className="mb-2" style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Nombre Evento:</label>
+                                                                                <input ref={nombreEvento} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+
+
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Nombre Cliente:</label>
+                                                                                <input ref={nombreCliente} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div className="mb-2" style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Abono:</label>
+                                                                                <input ref={abono} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+
+
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Valor Evento:</label>
+                                                                                <input ref={valorEvento} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div className="mb-2" style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Cantidad Personas:</label>
+                                                                                <input ref={cantidadPersonasModal} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+
+
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Estado Evento:</label>
+                                                                                <input ref={estadoModal} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div className="mb-2" style={{ display: "flex", justifyContent: "space-between" }}>
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Telefono Cliente:</label>
+                                                                                <input ref={telefonoCliente} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+
+
+                                                                            <div className="mb-2" style={{ width: "45%" }}>
+                                                                                <label htmlFor="recipient-name" className="col-form-label">Email Cliente:</label>
+                                                                                <input ref={emailCliente} disabled type="text" className="form-control" id="recipient-name" />
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div className="mb-3">
+                                                                            <label htmlFor="message-text" className="col-form-label">Descripcion:</label>
+                                                                            <textarea ref={descripcion} disabled className="form-control" id="message-text"></textarea>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                                <div className="modal-footer">
+                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </>)

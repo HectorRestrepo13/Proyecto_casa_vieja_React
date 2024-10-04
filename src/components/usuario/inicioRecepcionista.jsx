@@ -15,11 +15,6 @@ const Inicio = () => {
 
 
 
-
-
-
-
-
     // Definición de las columnas de la tabla
     const columns = [
         {
@@ -386,7 +381,6 @@ const Inicio = () => {
                         <nav>
                             <ol className="breadcrumb">
                                 <li className="breadcrumb-item item1 active">Pedidos</li>
-                                <li className="breadcrumb-item item2">Eventos</li>
                             </ol>
                         </nav>
                     </div>

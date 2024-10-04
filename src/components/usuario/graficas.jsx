@@ -540,12 +540,7 @@ const Graficas = ({ setMenuDespliegue }) => {
                 <div className="pageContenedor">
                     <div className="pagetitle">
                         <h1>ADMINISTRADOR</h1>
-                        <nav>
-                            <ol className="breadcrumb">
-                                <li className="breadcrumb-item item1 active">Usuarios Activos</li>
-                                <li className="breadcrumb-item item2">Usuarios Inactivos</li>
-                            </ol>
-                        </nav>
+
                     </div>
                 </div>
 

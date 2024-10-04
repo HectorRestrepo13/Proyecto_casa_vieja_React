@@ -94,7 +94,7 @@ const Login = () => {
                                 <div className="col-lg-6 mb-5 mb-lg-0" style={{ zIndex: 10 }}>
                                     <h1 className="my-5 display-5 fw-bold ls-tight" style={{ color: "#241212" }}>
                                         Restaurante <br />
-                                        <span style={{ color: "#57B7F2" }}>Casa Vieja</span>
+                                        <span style={{ color: "#57B7F2" }}>Gestion Datos</span>
                                     </h1>
                                     <p className="mb-4 opacity-70" style={{ color: "#241212" }}>
                                         Bienvenidos a Restaurante Casa Vieja, donde los sabores tradicionales se mezclan con
@@ -165,7 +165,6 @@ const Login = () => {
 
                                                 {/* Register buttons */}
                                                 <div className="text-center">
-                                                    <p>¿No tienes Cuenta?, <a onClick={() => { navigate("/registro") }} href="#">Registrate</a></p>
                                                     <button type="button" data-mdb-button-init data-mdb-ripple-init className="btn btn-link btn-floating mx-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-facebook" viewBox="0 0 16 16">
                                                             <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />

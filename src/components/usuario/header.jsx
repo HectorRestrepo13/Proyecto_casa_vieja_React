@@ -65,7 +65,7 @@ const Header = ({ setMenuDespliegue }) => {
                 <div className="d-flex align-items-center justify-content-between">
                     <a href="index.html" className="logo d-flex align-items-center">
                         <img src="assets/img/logo.png" alt="" />
-                        <span style={{ fontFamily: "-moz-initial" }} className="d-none d-lg-block">CASA VIEJA</span>
+                        <span style={{ fontFamily: "-moz-initial" }} className="d-none d-lg-block">Gestion de Datos</span>
                     </a>
                     <i className="bi bi-list toggle-sidebar-btn"></i>
                 </div>
@@ -174,7 +174,7 @@ const Header = ({ setMenuDespliegue }) => {
                             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                                 <li className="dropdown-header">
                                     <h6>{datosUsuario != null ? datosUsuario.nombreCompleto : "Usuario"}</h6>
-                                    <span>{datosUsuario != null && datosUsuario.RolId == 1 ? "ADMINISTRADOR" : datosUsuario != null && datosUsuario.RolId == 2 ? "CAJERO" : datosUsuario != null && datosUsuario.RolId == 3 ? "MESERO" : ""}</span>
+                                    <span>{datosUsuario != null && datosUsuario.RolId == 1 ? "ADMINISTRADOR" : datosUsuario != null && datosUsuario.RolId == 2 ? "CAJERO" : datosUsuario != null && datosUsuario.RolId == 3 ? "MESERO" : datosUsuario != null && datosUsuario.RolId == 4 ? "RECEPCIONISTA" : ""}</span>
                                 </li>
                                 <li>
                                     <hr className="dropdown-divider" />
@@ -189,12 +189,7 @@ const Header = ({ setMenuDespliegue }) => {
                                     <hr className="dropdown-divider" />
                                 </li>
 
-                                <li>
-                                    <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                        <i className="bi bi-gear"></i>
-                                        <span>Account Settings</span>
-                                    </a>
-                                </li>
+
                                 <li>
                                     <hr className="dropdown-divider" />
                                 </li>
